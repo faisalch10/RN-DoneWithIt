@@ -1,20 +1,25 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { useState } from 'react';
+import { StyleSheet, View, Text, TextInput, Switch } from 'react-native';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+import WelcomeScreen from './app/screens/WelcomeScreen';
+import ViewImageScreen from './app/screens/ViewImageScreen';
+import ListingDetailsScreen from './app/screens/ListingDetailsScreen';
+import MessagesList from './app/screens/MessagesList';
+import AccountScreen from './app/screens/AccountScreen';
+import ListingsScreen from './app/screens/ListingsScreen';
+import LoginScreen from './app/screens/LoginScreen';
+import RegisterScreen from './app/screens/RegisterScreen';
+import ListingEditScreen from './app/screens/ListingEditScreen';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+import Screen from './app/components/Screen';
+import Card from './app/components/Card';
+import Icon from './app/components/Icon';
+import ListItem from './app/components/lists/ListItem';
+import AppTextInput from './app/components/AppTextInput';
+import AppPicker from './app/components/AppPicker';
+
+const App = () => {
+  return <WelcomeScreen />;
+};
+
+export default App;
