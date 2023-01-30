@@ -1,25 +1,66 @@
-import { useState } from 'react';
-import { StyleSheet, View, Text, TextInput, Switch } from 'react-native';
-
-import WelcomeScreen from './app/screens/WelcomeScreen';
-import ViewImageScreen from './app/screens/ViewImageScreen';
-import ListingDetailsScreen from './app/screens/ListingDetailsScreen';
-import MessagesList from './app/screens/MessagesList';
-import AccountScreen from './app/screens/AccountScreen';
-import ListingsScreen from './app/screens/ListingsScreen';
-import LoginScreen from './app/screens/LoginScreen';
-import RegisterScreen from './app/screens/RegisterScreen';
-import ListingEditScreen from './app/screens/ListingEditScreen';
+import { useState, useEffect } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+// import AppLoading from 'expo-app-loading';
+import * as SplashScreen from 'expo-splash-screen';
 
 import Screen from './app/components/Screen';
-import Card from './app/components/Card';
-import Icon from './app/components/Icon';
-import ListItem from './app/components/lists/ListItem';
-import AppTextInput from './app/components/AppTextInput';
-import AppPicker from './app/components/AppPicker';
+import AuthNavigator from './app/navigation/AuthNavigator';
+import AppNavigator from './app/navigation/AppNavigator';
+import AuthContext from './app/auth/context';
+import authStorage from './app/auth/storage';
+import navigationTheme from './app/navigation/navigationTheme';
+import { navigationRef } from './app/navigation/rootNavigation';
+
+SplashScreen.preventAutoHideAsync();
 
 const App = () => {
-  return <WelcomeScreen />;
+  const [user, setUser] = useState(null);
+  const [isReady, setIsReady] = useState(false);
+
+  const restoreUser = async () => {
+    const user = await authStorage.getUser();
+
+    if (!user) {
+      setIsReady(true);
+      await SplashScreen.hideAsync();
+      return;
+    }
+    setUser(user);
+    setIsReady(true);
+    await SplashScreen.hideAsync();
+  };
+
+  // * BELOW CODE RELATED TO EXPO-APP-LOADING PACKAGE WHICH IS DEPRECATED!!. BUT STILL USEFUL IF YOU HAVE TO WORK ON SOME OLDER CODEBASES.
+
+  // if (!isReady)
+  //   return (
+  //     <AppLoading
+  //       startAsync={restoreUser}
+  //       onFinish={() => setIsReady(true)}
+  //       onError={err => console.log(err)}
+  //     />
+  //   );
+
+  useEffect(() => {
+    restoreUser();
+  }, []);
+
+  if (!isReady) {
+    return null;
+  }
+
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        setUser,
+      }}
+    >
+      <NavigationContainer ref={navigationRef} theme={navigationTheme}>
+        {user ? <AppNavigator /> : <AuthNavigator />}
+      </NavigationContainer>
+    </AuthContext.Provider>
+  );
 };
 
 export default App;

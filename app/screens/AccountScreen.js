@@ -3,6 +3,7 @@ import { View, StyleSheet, FlatList } from 'react-native';
 import Screen from '../components/Screen';
 import ListItem from '../components/lists/ListItem';
 import ListItemSeperator from '../components/lists/ListIemSeperator';
+import useAuth from '../auth/useAuth';
 import colors from '../config/colors';
 import Icon from '../components/Icon';
 
@@ -20,16 +21,19 @@ const menuItems = [
       name: 'email',
       backgroundColor: colors.secondary,
     },
+    targetScreen: 'Messages',
   },
 ];
 
-const AccountScreen = () => {
+const AccountScreen = ({ navigation }) => {
+  const { user, logOut } = useAuth();
+
   return (
     <Screen style={styles.screen}>
       <View style={styles.container}>
         <ListItem
-          title='Mosh Hamedani'
-          subTitle='faisalchaudhry1133@gmail.com'
+          title={user?.name}
+          subTitle={user?.email}
           image={require('../assets/mosh.jpg')}
         />
       </View>
@@ -46,6 +50,7 @@ const AccountScreen = () => {
                   backgroundColor={item.icon.backgroundColor}
                 />
               }
+              onPress={() => navigation.navigate(item.targetScreen)}
             />
           )}
           ItemSeparatorComponent={<ListItemSeperator />}
@@ -54,6 +59,7 @@ const AccountScreen = () => {
       <ListItem
         title='Logout'
         IconComponent={<Icon name='logout' backgroundColor='#ffe66d' />}
+        onPress={logOut}
       />
     </Screen>
   );
